@@ -1,5 +1,6 @@
 import os
 import io
+from huggingface_hub import hf_hub_download
 import glob
 import json
 from datetime import date
@@ -184,11 +185,20 @@ def _latest(pattern):
 
 @st.cache_resource
 def load_models():
-    # Prefer the improved LightGBM bundles made by train.py, else fall back to the old RF models
-    s_new, c_new = _latest("rossmann_lgbm_sales_*.pkl"), _latest("rossmann_lgbm_customers_*.pkl")
-    if s_new and c_new:
-        return joblib.load(s_new), joblib.load(c_new)
-    return joblib.load(SALES_MODEL_PATH), joblib.load(CUSTOMER_MODEL_PATH)
+    sales_model_path = hf_hub_download(
+        repo_id="anish071-ai/rossmann-models",
+        filename="rossmann_rf_01-10-2026-14-31-51.pkl"
+    )
+
+    customer_model_path = hf_hub_download(
+        repo_id="anish071-ai/rossmann-models",
+        filename="rossmann_customer_rf_01-10-2026-15-40-57.pkl"
+    )
+
+    sales_model = joblib.load(sales_model_path)
+    customer_model = joblib.load(customer_model_path)
+
+    return sales_model, customer_model
 
 
 @st.cache_data
