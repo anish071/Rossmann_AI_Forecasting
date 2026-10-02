@@ -187,19 +187,18 @@ def _latest(pattern):
 def load_models():
     sales_model_path = hf_hub_download(
         repo_id="anish071-ai/rossmann-models",
-        filename="rossmann_rf_01-10-2026-14-31-51.pkl"
+        filename="rossmann_lgbm_sales_compact.pkl"
     )
 
     customer_model_path = hf_hub_download(
         repo_id="anish071-ai/rossmann-models",
-        filename="rossmann_customer_rf_01-10-2026-15-40-57.pkl"
+        filename="rossmann_lgbm_customers_compact.pkl"
     )
 
     sales_model = joblib.load(sales_model_path)
     customer_model = joblib.load(customer_model_path)
 
     return sales_model, customer_model
-
 
 @st.cache_data
 def load_store_data():
